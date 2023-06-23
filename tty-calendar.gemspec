@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'tty-box', '>= 0.7.0'
   spec.add_dependency 'tty-cursor', '>= 0.7.0'
   spec.add_dependency 'tty-reader', '>= 0.9.0'
+  spec.add_development_dependency 'timecop'
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
