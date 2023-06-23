@@ -4,7 +4,7 @@ require 'tty/calendar/month/calendar_day'
 module TTY
   class Calendar
     class Month
-      attr_reader :month, :year, :start_of_month, :end_of_month
+      attr_reader :month, :year, :start_of_month, :end_of_month, :pastel
 
       WEEK_ROW = %w(Su Mo Tu We Th Fr Sa).freeze
 
@@ -13,6 +13,7 @@ module TTY
         @year = year.to_i
         @start_of_month = Date.new(year, month, 1)
         @end_of_month = @start_of_month.end_of_month
+        @pastel = Pastel.new
       end
 
       def render
@@ -37,7 +38,7 @@ module TTY
               rows.push(current_row)
               current_row = Array.new(7) { null_date }
             end
-            current_row[d.wday] = CalendarDay.new(d)
+            current_row[d.wday] = CalendarDay.new(d, pastel)
           end
           rows.push(current_row) unless current_row.empty?
         end
