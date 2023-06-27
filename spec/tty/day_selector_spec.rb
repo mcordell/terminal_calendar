@@ -108,5 +108,72 @@ module TTY
         end
       end
     end
+
+    RSpec.describe DaySelector::SelectionCell do
+      let(:calendar_day) { instance_double(TTY::Calendar::Month::CalendarDay) }
+      let(:selected) { false }
+      subject(:cell) { described_class.new(calendar_day, selected: selected) }
+
+      describe 'initialization' do
+        context 'when initialized with a calendar day' do
+          subject(:cell) { described_class.new(calendar_day) }
+
+          it 'defaults to not selected' do
+            is_expected.not_to be_selected
+          end
+
+          context 'and selected status' do
+            it 'sets the selected status' do
+              is_expected.not_to be_selected
+            end
+          end
+        end
+      end
+
+      describe '#render' do
+        subject { cell.render }
+        context 'when not selected' do
+          it 'renders the calendar day' do
+            calendar_day_render = '20'
+            allow(calendar_day).to receive(:render).and_return(calendar_day_render)
+            is_expected.to eq calendar_day_render
+          end
+        end
+
+        context 'when selected' do
+          let(:selected) { true }
+          it "renders 'XX'" do
+            is_expected.to eq 'XX'
+          end
+        end
+      end
+
+      describe '#date' do
+        let(:cal_day_date) { Object.new.freeze }
+
+        subject { cell.date }
+        it 'delegates to the calendar_day' do
+          allow(calendar_day).to receive(:date).and_return(cal_day_date)
+          is_expected.to eq cal_day_date
+        end
+      end
+
+      describe '#toggle_selected!' do
+        subject { cell.toggle_selected! }
+        context 'when not selected' do
+          it 'sets the selected status to true' do
+            expect { subject }.to change(cell, :selected?).from(false).to(true)
+          end
+        end
+
+        context 'when selected' do
+          let(:selected) { true }
+
+          it 'sets the selected status to true' do
+            expect { subject }.to change(cell, :selected?).from(true).to(false)
+          end
+        end
+      end
+    end
   end
 end

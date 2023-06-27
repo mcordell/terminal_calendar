@@ -105,28 +105,45 @@ module TTY
       end
 
       class SelectionCell
-        attr_reader(:calendar_day)
+        attr_reader(:calendar_day, :selected)
 
         def self.build(day_object)
           day_object.null? ? NullSelectionCell.new(day_object) : new(day_object)
         end
 
-        def initialize(calendar_day)
+        def initialize(calendar_day, selected: false)
           @calendar_day = calendar_day
+          @selected = selected
         end
 
         def render
-          calendar_day.render
+          return calendar_day.render unless selected?
+
+          'XX'
         end
 
         def null?
           false
         end
+
+        def toggle_selected!
+          @selected = !@selected
+        end
+
+        def date
+          calendar_day.date
+        end
+
+        alias_method  :selected?, :selected
       end
 
       class NullSelectionCell < SelectionCell
         def null?
           true
+        end
+
+        def selected
+          false
         end
       end
 
