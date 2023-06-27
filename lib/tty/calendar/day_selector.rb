@@ -179,11 +179,24 @@ module TTY
                 initialize_selector(kp)
               end
               redraw_selector
+            when 'x'
+              toggle_selected
             when 'q'
               break
             end
           end
         end
+
+        selection_grid.flatten.filter_map { |c| c.date if c.selected? }
+      end
+
+      def current_cell
+        selection_grid[selector.y][selector.x]
+      end
+
+      def toggle_selected
+        current_cell.toggle_selected!
+        redraw_selector
       end
 
       def render

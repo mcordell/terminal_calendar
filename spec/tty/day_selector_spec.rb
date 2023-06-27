@@ -9,13 +9,15 @@ module TTY
         let(:output) { StringIO.new }
         subject(:selector) { described_class.new(month, input: input, output: output) }
         let(:today) { Date.new(2023, 1, 1) }
+        let(:select_key) { 'x' }
+        let(:quit_key) { 'q' }
         before { Timecop.freeze(today) }
         after { Timecop.return  }
 
         describe '#select' do
           subject { selector.select }
           it 'prints the month' do
-            input << 'q'
+            input << quit_key
             input.rewind
             cal_output = <<~CAL
                    June 2023
@@ -32,14 +34,16 @@ module TTY
             expect(output.string).to eq(cal_output)
           end
 
-          let(:direction) { "\e[A" }
+          let(:up_direction) { "\e[A" }
+          let(:left_direction) { "\e[D"  }
+          let(:direction) { up_direction }
           subject { selector.select }
 
           describe 'first move' do
             let(:key_map) { TTY::Reader::Keys.keys.invert }
 
             before do
-              input << direction << 'q'
+              input << direction << quit_key
               input.rewind
             end
 
@@ -60,7 +64,7 @@ module TTY
             end
 
             context 'when the direction is left' do
-              let(:direction) { "\e[D" }
+              let(:direction) { left_direction }
 
               it 'sets the selector position to the last day of the month' do
                 subject
@@ -87,6 +91,28 @@ module TTY
                 x, y = selector.selector.position
                 expect(month.as_rows[x][y].day).to eq 1
               end
+            end
+          end
+
+          describe 'selecting a day' do
+            before do
+              input << up_direction << select_key << quit_key
+              input.rewind
+            end
+
+            it 'returns the selected day in an array' do
+              is_expected.to eq [Date.new(2023, 6, 30)]
+            end
+          end
+
+          describe 'selecting multiple days' do
+            before do
+              input << up_direction << select_key << left_direction << select_key << quit_key
+              input.rewind
+            end
+
+            it 'returns the selected days in an array' do
+              is_expected.to eq [Date.new(2023, 6, 29), Date.new(2023, 6, 30)]
             end
           end
         end
