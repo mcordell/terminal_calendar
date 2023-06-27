@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe TTY::Calendar::Month do
+  before { Timecop.freeze(Date.new(2023, 6, 7)) }
+  after { Timecop.return }
+
+  describe '.this_month' do
+    subject(:instance) { described_class.this_month }
+
+    it 'returns an instance initialized to the current month' do
+      expect(instance.month).to eq 6
+      expect(instance.year).to eq 2023
+    end
+  end
+
   describe '#render' do
     let(:month) {  described_class.new(3, 2023) }
 
     context 'when the month contains today' do
-      before { Timecop.freeze(Date.new(2023, 6, 7)) }
-      after { Timecop.return }
-
       let(:month) {  described_class.new(6, 2023) }
 
       it 'highlights the current day' do

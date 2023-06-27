@@ -8,6 +8,10 @@ module TTY
 
       WEEK_ROW = %w(Su Mo Tu We Th Fr Sa).freeze
 
+      def self.this_month
+        new(Date.today.month, Date.today.year)
+      end
+
       def initialize(month, year)
         @month = month.to_i
         @year = year.to_i
