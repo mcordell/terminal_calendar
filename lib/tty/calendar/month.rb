@@ -21,6 +21,8 @@ module TTY
         @pastel = Pastel.new
       end
 
+      # Renders the calendar as a string.
+      # @return [String] the rendered calendar as a string.
       def render
         calendar_header.concat(
           as_rows.map do |row|
@@ -30,18 +32,21 @@ module TTY
       end
       alias to_s render
 
+      # Returns an array of rows representing the data.
+
+      # @return [Array<Array>] an array of arrays, where each inner array represents a row of data
       def as_rows
         @as_rows ||= build_rows
       end
 
       def build_rows
         null_date = NullDay.new
-        current_row = Array.new(7) { null_date }
+        current_row = Array.new(DAYS_IN_THE_WEEK) { null_date }
         [].tap do |rows|
           (start_of_month..end_of_month).each do |d|
             if d.wday.zero? && !current_row.empty?
               rows.push(current_row)
-              current_row = Array.new(7) { null_date }
+              current_row = Array.new(DAYS_IN_THE_WEEK) { null_date }
             end
             current_row[d.wday] = CalendarDay.new(d, pastel)
           end
