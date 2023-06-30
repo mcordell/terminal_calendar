@@ -7,6 +7,7 @@ module TTY
       attr_reader :month, :year, :start_of_month, :end_of_month, :pastel
 
       WEEK_ROW = %w(Su Mo Tu We Th Fr Sa).freeze
+      DAYS_IN_THE_WEEK = WEEK_ROW.length
 
       def self.this_month
         new(Date.today.month, Date.today.year)

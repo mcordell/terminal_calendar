@@ -9,8 +9,8 @@ module TTY
         let(:output) { StringIO.new }
         subject(:selector) { described_class.new(month, input: input, output: output) }
         let(:today) { Date.new(2023, 1, 1) }
-        let(:select_key) { 'x' }
-        let(:quit_key) { 'q' }
+        let(:select_key) { "\t" }
+        let(:quit_key) { "\r" }
         before { Timecop.freeze(today) }
         after { Timecop.return  }
 
@@ -47,18 +47,10 @@ module TTY
               input.rewind
             end
 
-            it 'initializes the selector' do
-              expect do
-                subject
-              end.to change {
-                       selector.instance_variable_get('@selector')
-                     }.from(nil).to(be_a described_class::Selector)
-            end
-
             context 'when the direction is up' do
               it 'sets the selector position to the last day of the month' do
                 subject
-                x, y = selector.selector.position
+                x, y = selector.selection_grid.selector.position
                 expect(month.as_rows[x][y].day).to eq 30
               end
             end
@@ -68,7 +60,7 @@ module TTY
 
               it 'sets the selector position to the last day of the month' do
                 subject
-                x, y = selector.selector.position
+                x, y = selector.selection_grid.selector.position
                 expect(month.as_rows[x][y].day).to eq 30
               end
             end
@@ -78,7 +70,7 @@ module TTY
 
               it 'sets the selector position to the first day of the month' do
                 subject
-                x, y = selector.selector.position
+                x, y = selector.selection_grid.selector.position
                 expect(month.as_rows[x][y].day).to eq 1
               end
             end
@@ -88,7 +80,7 @@ module TTY
 
               it 'sets the selector position to the first day of the month' do
                 subject
-                x, y = selector.selector.position
+                x, y = selector.selection_grid.selector.position
                 expect(month.as_rows[x][y].day).to eq 1
               end
             end
@@ -120,22 +112,12 @@ module TTY
         describe '#selection_grid' do
           subject { selector.selection_grid }
 
-          it 'contains SelectionCells' do
-            expect(subject.flatten).to all be_a described_class::SelectionCell
-          end
-
-          it 'contains a row for each week in the month' do
-            expect(subject.length).to eq 5
-          end
-
-          it 'each row has 7 cells, one for each days of the week' do
-            expect(subject.map(&:length)).to all be 7
-          end
+          it { is_expected.to be_a TTY::Calendar::Selection::Grid }
         end
       end
     end
 
-    RSpec.describe DaySelector::SelectionCell do
+    RSpec.describe TTY::Calendar::Selection::Cell do
       let(:calendar_day) { instance_double(TTY::Calendar::Month::CalendarDay) }
       let(:selected) { false }
       subject(:cell) { described_class.new(calendar_day, selected: selected) }

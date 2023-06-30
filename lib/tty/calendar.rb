@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require 'forwardable'
 require_relative 'calendar/version'
 require_relative 'calendar/month'
+require_relative 'calendar/selection/cell'
+require_relative 'calendar/selection/selector'
+require_relative 'calendar/selection/grid'
 require_relative 'calendar/day_selector'
 require_relative '../date_extensions'
 require 'pastel'
