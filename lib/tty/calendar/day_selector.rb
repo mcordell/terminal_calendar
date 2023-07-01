@@ -4,13 +4,15 @@ module TTY
   class Calendar
     class DaySelector
       DAYS_IN_THE_WEEK = 7
+
       def self.select(month: TTY::Calendar::Month.this_month)
         new(month).select
       end
 
       attr_reader :month, :reader, :cursor
 
-      def initialize(month, input: $stdin, output: $stdout, env: ENV, interrupt: :error, track_history: true)
+      def initialize(month, input: $stdin, output: $stdout, env: ENV, interrupt: :error,
+                     track_history: true)
         @month = month
         @reader = TTY::Reader.new(
           input: input,
@@ -26,7 +28,7 @@ module TTY
 
       def select
         cursor.invisible do
-          @output.print(render)
+          render
 
           loop do
             press = reader.read_keypress
@@ -50,9 +52,15 @@ module TTY
       end
 
       def render
-        month.calendar_header.concat(
-          selection_grid.render_lines
-        ).join("\n")
+        @output.print(
+          headers.concat(
+            selection_grid.render_lines
+          ).join("\n")
+        )
+      end
+
+      def headers
+        @month.calendar_header
       end
 
       def selection_grid

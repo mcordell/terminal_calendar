@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Naming::MethodParameterName
 module TTY
   class Calendar
     module Selection
@@ -9,7 +10,7 @@ module TTY
 
         attr_reader(:selection_grid)
 
-        def_delegators :selection_grid, :bottom_of_grid, :top_of_grid
+        def_delegators :selection_grid, :bottom_of_grid, :top_of_grid, :row_end
 
         def self.build(selection_grid, initial_spot)
           if initial_spot == :bottom
@@ -21,12 +22,12 @@ module TTY
           new(x, y, selection_grid)
         end
 
-        def initialize(grid_x, grid_y, selection_grid)
-          @x = grid_x
-          @y = grid_y
+        def initialize(x, y, selection_grid)
+          @x = x
+          @y = y
           @selection_grid = selection_grid
           @top_of_grid = 0
-          @redraw_position = grid_y
+          @redraw_position = y
         end
 
         def position
@@ -47,6 +48,7 @@ module TTY
 
         def move(direction)
           pre_move
+
           case direction
           when :up
             if y == top_of_grid
@@ -68,7 +70,7 @@ module TTY
               self.x -= 1
             end
           when :right
-            if x == rightmost_gridsquare
+            if x == row_end
               wrap(:right)
             else
               self.x += 1
@@ -82,10 +84,6 @@ module TTY
           0
         end
 
-        def rightmost_gridsquare
-          @selection_grid.row_end
-        end
-
         def wrap(direction)
           case direction
           when :up
@@ -94,7 +92,7 @@ module TTY
           when :down
             self.y = top_of_grid
           when :left
-            self.x = rightmost_gridsquare
+            self.x = row_end
           when :right
             self.x = leftmost_gridsquare
           end
@@ -103,3 +101,4 @@ module TTY
     end
   end
 end
+# rubocop:enable Naming::MethodParameterName
