@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require_relative '../tty/prompt/carousel'
 require_relative 'calendar/version'
 require_relative 'calendar/month'
 require_relative 'calendar/selection/cell'
