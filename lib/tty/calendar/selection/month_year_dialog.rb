@@ -74,7 +74,8 @@ module TTY
           @selected = :month
           @month_car = TTY::Prompt::Carousel.new(Date::MONTHNAMES.compact, start_at: start_at.month - 1,
                                                                            option_style: :inverse, output: output)
-          @year_car = TTY::Prompt::Carousel.new((0..3000).map(&:to_s), start_at: start_at.year, output: output)
+          @year_car = TTY::Prompt::Carousel.new((0..3000).map(&:to_s), start_at: start_at.year, output: output,
+                                                                       margin: 0, padding: 4)
         end
 
         def selected_car

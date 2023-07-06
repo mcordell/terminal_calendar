@@ -11,6 +11,10 @@ module TTY
 
       attr_reader :month, :reader, :cursor
 
+      # @return [TTY::Calendar::Selection::Selector]
+      # @api private
+      attr_reader :selector
+
       def initialize(month, input: $stdin, output: $stdout, env: ENV, interrupt: :error,
                      track_history: true)
         @month = month
@@ -36,10 +40,10 @@ module TTY
 
             case kp
             when :up, :down, :left, :right
-              selection_grid.move(kp)
+              move(kp)
               redraw
             when :tab
-              selection_grid.toggle_current_cell!
+              selector.toggle_selected!
               redraw
             when :return
               @output.puts
@@ -76,6 +80,30 @@ module TTY
 
       def refresh(lines)
         @cursor.clear_lines(lines)
+      end
+
+      # Moves the selector in the specified direction.
+      # @param direction [Symbol] The direction to move the selector in.
+      #   Valid values are :up, :down, :left, and :right.
+      #
+      # @return [TTY::Calendar::Selection::Selector]
+      def move(direction)
+        return initialize_selector(direction) unless selector
+
+        selector.move(direction)
+      end
+
+      # Initializes the selector based on the given direction.
+      #
+      # @param direction [Symbol] The direction to initialize the selector.
+      #   Must be one of :up, :left, :down, or :right.
+      #
+      # @return [TTY::Calendar::Selection::Selector]
+      #
+      # @api private
+      def initialize_selector(direction)
+        position = %i(up left).include?(direction) ? :bottom : :top
+        @selector = TTY::Calendar::Selection::Selector.build(selection_grid, position)
       end
     end
   end

@@ -4,13 +4,15 @@ module TTY
   class Calendar
     module Selection
       class Grid
-        # @return [TTY::Calendar::Selection::Selector]
-        # @api private
-        attr_reader :selector
-
         # @return [Array<Array>]
         # @api private
         attr_reader :grid
+
+        attr_reader :highlighted_position
+
+        # @return [Integer]
+        # @api private
+        attr_accessor :redraw_at
 
         # Builds a new grid from a array of arrays of objects
         #
@@ -85,27 +87,18 @@ module TTY
                        bottom_of_grid - count
                      end
 
+          highlighted_x, highlighted_y = highlighted_position
+
           (start_at..bottom_of_grid).map do |i|
-            next grid[i].map(&:render).join(' ') unless selector && i == selector.y
+            next grid[i].map(&:render).join(' ') unless highlighted_y && i == highlighted_y
 
             (0..row_end).map do |x|
               rendered = grid[i][x].render
-              next rendered unless x == selector.x
+              next rendered unless x == highlighted_x
 
               @pastel.inverse(rendered)
             end.join(' ')
           end
-        end
-
-        # Moves the selector in the specified direction.
-        # @param direction [Symbol] The direction to move the selector in.
-        #   Valid values are :up, :down, :left, and :right.
-        #
-        # @return [TTY::Calendar::Selection::Selector]
-        def move(direction)
-          return initialize_selector(direction) unless selector
-
-          selector.move(direction)
         end
 
         # Returns the y value of the bottom of the grid
@@ -183,37 +176,24 @@ module TTY
           grid.flatten.filter(&:selected?)
         end
 
-        def toggle_current_cell!
-          current_cell.toggle_selected!
-        end
-
         def redraw_lines
-          return unless selector
-
-          render_lines(grid.length - selector.redraw_position)
+          render_lines(redraw_at.nil? ? :all : (grid.length - redraw_at))
         end
 
         def row_end
           grid.first.length - 1
         end
 
-        private
-
-        def current_cell
-          cell(selector.x, selector.y)
+        def highlighted_position=(pos)
+          @highlighted_position = pos
         end
 
-        # Initializes the selector based on the given direction.
-        #
-        # @param direction [Symbol] The direction to initialize the selector.
-        #   Must be one of :up, :left, :down, or :right.
-        #
-        # @return [TTY::Calendar::Selection::Selector]
-        #
-        # @api private
-        def initialize_selector(direction)
-          position = %i(up left).include?(direction) ? :bottom : :top
-          @selector = Selector.build(self, position)
+        def clear_highlight!
+          @highlighted_position = nil
+        end
+
+        def highlighted?
+          @highlighted_position.nil?
         end
       end
     end

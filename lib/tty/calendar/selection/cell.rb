@@ -92,6 +92,10 @@ module TTY
         def selected
           false
         end
+
+        def toggle_selected!
+          false
+        end
       end
     end
   end
