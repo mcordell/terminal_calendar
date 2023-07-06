@@ -14,7 +14,7 @@ module TTY
       }.freeze
 
       def initialize(options, start_at: 0, key_map: DEFAULT_KEY_MAP, input: $stdin, output: $stdout, env: ENV, interrupt: :error,
-                     track_history: true, option_style: nil)
+                     track_history: true, option_style: nil, margin: 0, padding: 2)
         @reader = TTY::Reader.new(
           input: input,
           output: output,
@@ -26,12 +26,13 @@ module TTY
         @output = output
         @options = options
         @max_option_length = @options.map(&:length).max
-        @padding = 2
+        @padding = padding
         @content_size = @padding + @max_option_length + @padding
         @current_index = start_at
         @cursor = TTY::Cursor
         @pastel = Pastel.new
         @option_style = option_style
+        @margin = margin
       end
 
       def select
@@ -54,7 +55,7 @@ module TTY
       end
 
       def render
-        output.print("#{left_arrow}#{content}#{right_arrow}")
+        output.print("#{' ' * margin}#{left_arrow}#{content}#{right_arrow}")
       end
 
       def content
@@ -99,7 +100,7 @@ module TTY
         pastel.decorate(selected_option, *option_style)
       end
 
-      attr_reader :reader, :key_map, :options, :pastel, :current_index, :output, :content_size
+      attr_reader :reader, :key_map, :options, :pastel, :current_index, :output, :content_size, :margin
 
       def_delegator :@cursor, :clear_lines
     end
