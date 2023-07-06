@@ -16,6 +16,12 @@ require 'tty-reader'
 module TTY
   class Calendar
     class Error < StandardError; end
-    # Your code goes here...
+
+    # This method allows the user to select one or more days from the current month calendar.
+    #
+    # @return [Date] The selected days.
+    def self.select_days
+      TTY::Calendar::DaySelector.select
+    end
   end
 end
