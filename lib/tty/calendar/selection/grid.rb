@@ -177,7 +177,7 @@ module TTY
         end
 
         def redraw_lines
-          render_lines(redraw_at.nil? ? :all : (grid.length - redraw_at))
+          render_lines(redraw_at.nil? || redraw_at <= 0 ? :all : (grid.length - redraw_at))
         end
 
         def row_end

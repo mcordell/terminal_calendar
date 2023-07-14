@@ -3,7 +3,7 @@
 module TTY
   class Calendar
     class DaySelector
-      DAYS_IN_THE_WEEK = 7
+      extend Forwardable
 
       def self.select(month: TTY::Calendar::Month.this_month)
         new(month).select
@@ -17,7 +17,8 @@ module TTY
 
       def initialize(month, input: $stdin, output: $stdout, env: ENV, interrupt: :error,
                      track_history: true)
-        @month = month
+        @current_page = Selection::MonthPage.build(month)
+        @month_pages = [[month, @current_page]].to_h
         @reader = TTY::Reader.new(
           input: input,
           output: output,
@@ -31,50 +32,71 @@ module TTY
       end
 
       def select
-        cursor.invisible do
-          render
+        @output.print(@cursor.hide)
+        render
 
-          loop do
-            press = reader.read_keypress
-            kp = TTY::Reader::Keys.keys.fetch(press) { press }
+        loop do
+          press = reader.read_keypress
+          kp = TTY::Reader::Keys.keys.fetch(press) { press }
 
-            case kp
-            when :up, :down, :left, :right
-              move(kp)
-              redraw
-            when :tab
+          case kp
+          when :up, :down, :left, :right
+            move(kp)
+            redraw
+          when :tab
+            unless selector&.on_header?
               selector.toggle_selected!
               redraw
-            when :return
-              @output.puts
+            end
+          when :return
+            unless selector && selector&.on_header?
               break
             end
+
+            clear_page_lines
+            new_date = TTY::Calendar::Selection::MonthYearDialog.new(output: @output,
+                                                                     start_at: current_page.month.start_of_month).select
+            new_month = TTY::Calendar::Month.new(new_date.month, new_date.year)
+            @current_page = month_pages.fetch(new_month) do
+              month_pages[new_month] = Selection::MonthPage.build(new_month)
+            end
+            clear_selection_dialog
+            initialize_selector(:bottom)
+            render
+            @output.print(@cursor.hide)
+            redraw
           end
         end
 
-        selection_grid.selected_cells.map(&:date)
+        month_pages.values.flat_map { |p| p.selection_grid.selected_cells.map(&:date) }
+      ensure
+        @output.print(@cursor.show)
       end
 
       def render
-        @output.print(
-          headers.concat(
-            selection_grid.render_lines
-          ).join("\n")
-        )
-      end
-
-      def headers
-        @month.calendar_header
-      end
-
-      def selection_grid
-        @selection_grid ||= TTY::Calendar::Selection::Grid.build_from_objects(month.as_rows, pastel: @pastel)
+        @output.print(current_page.render)
       end
 
       private
 
+      def clear_full_page!
+        @output.print(refresh(current_page.line_count))
+      end
+
+      def clear_page_lines
+        @output.print(refresh(current_page.redraw_lines.length))
+      end
+
+      def clear_selection_dialog
+        @output.print(refresh(2))
+      end
+
+      attr_reader :current_page, :month_pages
+
+      def_delegators(:current_page, :selection_grid)
+
       def redraw
-        lines = selection_grid.redraw_lines
+        lines = current_page.redraw_lines
         @output.print(refresh(lines.length) + lines.join("\n"))
       end
 
@@ -90,7 +112,24 @@ module TTY
       def move(direction)
         return initialize_selector(direction) unless selector
 
-        selector.move(direction)
+        case selector.move(direction)
+        when :off_left
+          new_month = @current_page.month.previous_month
+          clear_full_page!
+          @current_page = month_pages.fetch(new_month) do
+            month_pages[new_month] = Selection::MonthPage.build(new_month)
+          end
+          initialize_selector(:bottom)
+          render
+        when :off_right
+          new_month = @current_page.month.next_month
+          clear_full_page!
+          @current_page = month_pages.fetch(new_month) do
+            month_pages[new_month] = Selection::MonthPage.build(new_month)
+          end
+          initialize_selector(:bottom)
+          render
+        end
       end
 
       # Initializes the selector based on the given direction.
@@ -103,7 +142,7 @@ module TTY
       # @api private
       def initialize_selector(direction)
         position = %i(up left).include?(direction) ? :bottom : :top
-        @selector = TTY::Calendar::Selection::Selector.build(selection_grid, position)
+        @selector = TTY::Calendar::Selection::Selector.build(current_page, position)
       end
     end
   end

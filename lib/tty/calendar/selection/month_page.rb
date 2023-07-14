@@ -23,7 +23,11 @@ module TTY
         end
 
         def redraw_lines
-          selection_grid.redraw_lines
+          if selection_grid.redraw_at.nil? || selection_grid.redraw_at.negative?
+            calendar_header(selected: selection_grid&.redraw_at == -1).concat(selection_grid.redraw_lines)
+          else
+            selection_grid.redraw_lines
+          end
         end
 
         def line_count

@@ -10,16 +10,17 @@ module TTY
 
         attr_reader(:x, :y, :selection_grid)
 
+        def_delegator :@page, :selection_grid
         def_delegators :selection_grid, :bottom_of_grid, :top_of_grid, :row_end
 
-        def self.build(selection_grid, initial_spot)
+        def self.build(page, initial_spot)
           if initial_spot == :bottom
-            x, y = selection_grid.bottom_right_live_cell_position
+            x, y = page.selection_grid.bottom_right_live_cell_position
           else
-            x, y = selection_grid.top_left_live_cell_position
+            x, y = page.selection_grid.top_left_live_cell_position
           end
 
-          new(x, y, selection_grid)
+          new(x, y, page)
         end
 
         # Initializes a new selector
@@ -28,13 +29,17 @@ module TTY
         # @param y [Integer] the y-coordinate of the selector
         # @param selection_grid [Array<Array<TTY::Calendar::Selection::Cell>>] the selection grid
         # @param wrap [Symbol] (optional) the wrap direction, defaults to :all
-        def initialize(x, y, selection_grid, wrap: :all)
+        def initialize(x, y, page, wrap: [])
           @x = x
-          @selection_grid = selection_grid
+          @page = page
           @top_of_grid = 0
           @y = y
-          @wrap_directions = wrap
+          @wrap_directions = wrap == :all ? DIRECTIONS : wrap
           post_move
+        end
+
+        def on_header?
+          y == -1
         end
 
         # Toggles the selected state of the cell at the current position on the grid.
@@ -72,9 +77,11 @@ module TTY
 
           pre_move
 
-          send("move_#{direction}")
+          result = send("move_#{direction}")
 
           post_move
+
+          result
         end
 
         private
@@ -111,7 +118,11 @@ module TTY
 
         def move_up
           if y == top_of_grid
-            wrap(:up)
+            wrap(:up) if @wrap_directions.include? :up
+            self.y -= 1
+          elsif on_header?
+            selection_grid.redraw_at = -2
+            self.y = bottom_of_grid
           else
             self.y -= 1
           end
@@ -120,15 +131,19 @@ module TTY
         def move_down
           if y == bottom_of_grid
             wrap(:down)
+          elsif on_header?
+            selection_grid.redraw_at = y == -1 ? -2 : y
+            self.y += 1
           else
-            selection_grid.redraw_at = y
             self.y += 1
           end
         end
 
         def move_left
           if x == leftmost_gridsquare
-            wrap(:left)
+            return wrap(:left) if @wrap_directions.include? :left
+
+            :off_left
           else
             self.x -= 1
           end
@@ -136,10 +151,16 @@ module TTY
 
         def move_right
           if x == row_end
-            wrap(:right)
+            return wrap(:right) if @wrap_directions.include? :right
+
+            :off_right
           else
             self.x += 1
           end
+        end
+
+        def redraw_header!
+          selection_grid.redraw_at = -2
         end
       end
     end
