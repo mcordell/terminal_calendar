@@ -23,5 +23,9 @@ module TTY
     def self.select_days
       TTY::Calendar::DaySelector.select
     end
+
+    def self.all_months
+      @all_months ||= {}
+    end
   end
 end

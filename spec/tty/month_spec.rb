@@ -3,6 +3,7 @@
 RSpec.describe TTY::Calendar::Month do
   before { Timecop.freeze(Date.new(2023, 6, 7)) }
   after { Timecop.return }
+  subject(:instance) { described_class.new(6, 2023) }
 
   describe '.this_month' do
     subject(:instance) { described_class.this_month }
@@ -90,5 +91,41 @@ RSpec.describe TTY::Calendar::Month do
         end
       end
     end
+  end
+
+  describe '#==' do
+    it 'is true for months with the same year and month' do
+      month_one = described_class.new(5, 2023)
+      month_two = described_class.new(5, 2023)
+      expect(month_one == month_two).to eq true
+    end
+  end
+
+  describe '#eql?' do
+    it 'is true for months with the same year and month' do
+      month_one = described_class.new(5, 2023)
+      month_two = described_class.new(5, 2023)
+      expect(month_one.eql?(month_two)).to eq true
+    end
+  end
+
+  describe '#hash' do
+    it 'has the same value for months with the same year and month' do
+      month_one = described_class.new(5, 2023)
+      month_two = described_class.new(5, 2023)
+      expect(month_one.hash).to eq month_two.hash
+    end
+  end
+
+  describe '#initialization' do
+    it 'only returns one of the object' do
+      month_one = described_class.new(3, 2023)
+      month_two = described_class.new(3, 2023)
+      expect(month_one.object_id).to eq month_two.object_id
+    end
+  end
+
+  describe '#next_month' do
+    let(:month) {  described_class.new(3, 2023) }
   end
 end
