@@ -39,6 +39,17 @@ module TTY
         @as_rows ||= build_rows
       end
 
+      def next_month
+        new_month = month == 12 ? 1 : month + 1
+        new_year = new_month == 1 ? year + 1 : year
+        self.class.new(new_month, new_year)
+      end
+
+      def previous_month
+        new_month = month == 1 ? 12 : month - 1
+        new_year = new_month == 12 ? year - 1 : year
+        self.class.new(new_month, new_year)
+      end
       # Renders the calendar as a string.
       # @return [String] the rendered calendar as a string.
       def render

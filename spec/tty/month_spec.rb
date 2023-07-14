@@ -93,6 +93,38 @@ RSpec.describe TTY::Calendar::Month do
     end
   end
 
+  describe '#next_month' do
+    subject { instance.next_month }
+
+    it 'returns the next month' do
+      is_expected.to eq described_class.new(7, 2023)
+    end
+
+    context 'when the month is December' do
+      let(:instance) { described_class.new(12, 2023) }
+
+      it 'returns the next month in the next year' do
+        is_expected.to eq described_class.new(1, 2024)
+      end
+    end
+  end
+
+  describe '#previous_month' do
+    subject { instance.previous_month }
+
+    it 'returns the previous month' do
+      is_expected.to eq described_class.new(5, 2023)
+    end
+
+    context 'when the month is January' do
+      let(:instance) { described_class.new(1, 2023) }
+
+      it 'returns the previous month in the previous year' do
+        is_expected.to eq described_class.new(12, 2022)
+      end
+    end
+  end
+
   describe '#==' do
     it 'is true for months with the same year and month' do
       month_one = described_class.new(5, 2023)
