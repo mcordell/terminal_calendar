@@ -10,8 +10,7 @@ module TTY
 
       attr_reader :month, :year, :start_of_month, :end_of_month
 
-      WEEK_ROW = %w(Su Mo Tu We Th Fr Sa).freeze
-      DAYS_IN_THE_WEEK = WEEK_ROW.length
+      DAYS_IN_THE_WEEK = 7
 
       def self.this_month
         new(Date.today.month, Date.today.year)
@@ -50,16 +49,6 @@ module TTY
         new_year = new_month == 12 ? year - 1 : year
         self.class.new(new_month, new_year)
       end
-      # Renders the calendar as a string.
-      # @return [String] the rendered calendar as a string.
-      def render
-        calendar_header.concat(
-          as_rows.map do |row|
-            row.map(&:to_s).join(' ')
-          end
-        ).join("\n")
-      end
-      alias to_s render
 
       def ==(other)
         eql?(other)
@@ -93,21 +82,6 @@ module TTY
           end
           rows.push(current_row) unless current_row.empty?
         end
-      end
-
-      def calendar_header
-        week_row = WEEK_ROW.join(' ')
-        month_row = month_header
-        pad_size = (week_row.length - month_row.length) / 2
-        month_row = (' ' * pad_size).concat(month_row)
-        [
-          month_row,
-          week_row
-        ]
-      end
-
-      def month_header
-        Date::MONTHNAMES[month] + " #{year}"
       end
     end
   end
