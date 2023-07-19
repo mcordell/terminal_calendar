@@ -16,6 +16,7 @@ module TTY
 
         describe '#select' do
           subject { selector.select }
+
           it 'prints the month' do
             input << quit_key
             input.rewind
@@ -29,9 +30,12 @@ module TTY
               25 26 27 28 29 30#{'   '}
             CAL
 
+            # wrapping to hide and show the cursor
+            wrapped = "\e[?25l#{cal_output.chomp}\e[?25h"
+
             subject
 
-            expect(output.string).to eq(cal_output)
+            expect(output.string).to eq(wrapped)
           end
 
           let(:up_direction) { "\e[A" }
@@ -47,11 +51,16 @@ module TTY
               input.rewind
             end
 
+            let(:selected_day) do
+              x = selector.selector.x
+              y = selector.selector.y
+              month.as_rows[y][x].day
+            end
+
             context 'when the direction is up' do
               it 'sets the selector position to the last day of the month' do
                 subject
-                x, y = selector.selection_grid.selector.position
-                expect(month.as_rows[x][y].day).to eq 30
+                expect(selected_day).to eq 30
               end
             end
 
@@ -60,8 +69,7 @@ module TTY
 
               it 'sets the selector position to the last day of the month' do
                 subject
-                x, y = selector.selection_grid.selector.position
-                expect(month.as_rows[x][y].day).to eq 30
+                expect(selected_day).to eq 30
               end
             end
 
@@ -70,8 +78,7 @@ module TTY
 
               it 'sets the selector position to the first day of the month' do
                 subject
-                x, y = selector.selection_grid.selector.position
-                expect(month.as_rows[x][y].day).to eq 1
+                expect(selected_day).to eq 1
               end
             end
 
@@ -80,8 +87,7 @@ module TTY
 
               it 'sets the selector position to the first day of the month' do
                 subject
-                x, y = selector.selection_grid.selector.position
-                expect(month.as_rows[x][y].day).to eq 1
+                expect(selected_day).to eq 1
               end
             end
           end
