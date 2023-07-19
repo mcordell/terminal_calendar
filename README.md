@@ -29,3 +29,11 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/mcordell/tty-calendar.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/license/mit/).
+
+## Copyright
+
+Copyright (c) 2023 Michael Cordell. See LICENSE for further details.
