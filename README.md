@@ -1,24 +1,28 @@
-# Tty::Calendar
+# TTY::Calendar
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tty/calendar`. To experiment with that code, run `bin/console` for an interactive prompt.
+> A calendar and day picker for the terminal
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+    $ bundle add tty-calendar
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+    $ gem install tty-calendar
 
 ## Usage
 
-TODO: Write usage instructions here
+`tty-calendar` can be used to render a calendar page similar to the linux tool `cal`:
+
+```
+require 'tty-calendar'
+# this will render a calendar for the current month to the command line
+puts TTY::Calendar.cal
+```
+
+![cal screenshot](./_doc/cal-screenshot.png) 
 
 ## Development
 

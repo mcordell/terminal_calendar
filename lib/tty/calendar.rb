@@ -25,6 +25,14 @@ module TTY
       TTY::Calendar::DatePicker.pick
     end
 
+    # @param month [Month] month to render, defaults to the current month
+    # @return [String] the month page as a string
+    def self.cal(month=Month.this_month())
+      Selection::MonthPage.build(month).render
+    end
+
+    # Stores a cache of month objects
+    # @api private
     def self.all_months
       @all_months ||= {}
     end
