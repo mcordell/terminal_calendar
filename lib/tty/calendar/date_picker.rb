@@ -2,11 +2,11 @@
 #
 module TTY
   class Calendar
-    class DaySelector
+    class DatePicker
       extend Forwardable
 
-      def self.select(month: TTY::Calendar::Month.this_month)
-        new(month).select
+      def self.pick(month: TTY::Calendar::Month.this_month)
+        new(month).pick
       end
 
       attr_reader :month, :reader, :cursor
@@ -31,7 +31,7 @@ module TTY
         @pastel = Pastel.new
       end
 
-      def select
+      def pick
         @output.print(@cursor.hide)
         render
 

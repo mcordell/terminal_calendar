@@ -8,7 +8,7 @@ require_relative 'calendar/selection/cell'
 require_relative 'calendar/selection/selector'
 require_relative 'calendar/selection/grid'
 require_relative 'calendar/selection/month_page'
-require_relative 'calendar/day_selector'
+require_relative 'calendar/date_picker'
 require_relative '../date_extensions'
 require 'pastel'
 require 'tty-cursor'
@@ -18,11 +18,11 @@ module TTY
   class Calendar
     class Error < StandardError; end
 
-    # This method allows the user to select one or more days from the current month calendar.
+    # This method allows the user to select one or more days starting from the current month calendar.
     #
-    # @return [Date] The selected days.
-    def self.select_days
-      TTY::Calendar::DaySelector.select
+    # @return [Array<Date>] The selected days.
+    def self.date_picker
+      TTY::Calendar::DatePicker.pick
     end
 
     def self.all_months

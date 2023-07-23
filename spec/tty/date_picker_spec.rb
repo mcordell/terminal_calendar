@@ -2,7 +2,7 @@
 
 module TTY
   class Calendar
-    RSpec.describe DaySelector do
+    RSpec.describe DatePicker do
       context 'when initialized with a month' do
         let(:month) { Month.new(6, 2023) }
         let(:input) { StringIO.new }
@@ -14,8 +14,8 @@ module TTY
         before { Timecop.freeze(today) }
         after { Timecop.return  }
 
-        describe '#select' do
-          subject { selector.select }
+        describe '#pick' do
+          subject { selector.pick }
 
           it 'prints the month' do
             input << quit_key
@@ -41,7 +41,7 @@ module TTY
           let(:up_direction) { "\e[A" }
           let(:left_direction) { "\e[D"  }
           let(:direction) { up_direction }
-          subject { selector.select }
+          subject { selector.pick }
 
           describe 'first move' do
             let(:key_map) { TTY::Reader::Keys.keys.invert }
