@@ -43,9 +43,18 @@ module TTY
           let(:direction) { up_direction }
           subject { selector.pick }
 
-          describe 'first move' do
-            let(:key_map) { TTY::Reader::Keys.keys.invert }
+          describe 'trying to toggle a day selector does not have one selected' do
+            before do
+              input << select_key << quit_key
+              input.rewind
+            end
 
+            it 'returns an empty array' do
+              is_expected.to eq []
+            end
+          end
+
+          describe 'first move' do
             before do
               input << direction << quit_key
               input.rewind

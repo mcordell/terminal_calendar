@@ -45,7 +45,7 @@ module TTY
             redraw
           when :tab
             unless selector&.on_header?
-              selector.toggle_selected!
+              selector&.toggle_selected!
               redraw
             end
           when :return
