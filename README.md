@@ -16,7 +16,7 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 `tty-calendar` can be used to render a calendar page similar to the linux tool `cal`:
 
-```
+```ruby
 require 'tty-calendar'
 # this will render a calendar for the current month to the command line
 puts TTY::Calendar.cal
