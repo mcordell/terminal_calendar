@@ -18,11 +18,27 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ```ruby
 require 'tty-calendar'
-# this will render a calendar for the current month to the command line
+# this will render a calendar for the current month to the comma(nd line
 puts TTY::Calendar.cal
 ```
 
 ![cal screenshot](./_doc/cal-screenshot.png) 
+
+`tty-calendar` can also be used as a date picker to select days from a calendar:
+
+![picker gif](./_doc/date-picker.gif)
+
+In the above GIF, the following code allows dates to be picked:
+
+```ruby
+require 'tty/calendar'
+
+dates = TTY::Calendar.date_picker
+
+# where dates is an Array of Date objects
+```
+
+When the calendar pops up the cursor is navigated with standard error keys, `Tab` toggles a day as selected, and `Enter` will end the picking session
 
 ## Development
 
