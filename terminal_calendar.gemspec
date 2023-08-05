@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-require_relative 'lib/tty/calendar/version'
+require_relative 'lib/terminal_calendar/version'
 
 Gem::Specification.new do |spec|
-  spec.name = 'tty-calendar'
-  spec.version = TTY::Calendar::VERSION
+  spec.name = 'terminal_calendar'
+  spec.version = TerminalCalendar::VERSION
   spec.authors = ['Michael Cordell']
   spec.email = ['mike@mikecordell.com']
 
-  spec.summary = 'Terminal calendar'
+  spec.summary = 'Terminal Calendar'
   spec.description = 'Utility for manipulating a calendar in the command line'
-  spec.homepage = 'https://github.com/mcordell/tty-calendar'
+  spec.homepage = 'https://github.com/mcordell/terminal_calendar'
   spec.required_ruby_version = '>= 2.6.0'
   spec.license = 'MIT'
 
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = 'https://github.com/mcordell/tty-calendar'
+  spec.metadata['source_code_uri'] = 'https://github.com/mcordell/terminal_calendar'
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   spec.files = Dir.chdir(__dir__) do

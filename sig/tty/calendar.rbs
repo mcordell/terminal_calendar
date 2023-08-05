@@ -1,6 +1,4 @@
-module TTY
-  module Calendar
-    VERSION: String
-    # See the writing guide of rbs: https://github.com/ruby/rbs#guides
-  end
+module TerminalCalendar
+  VERSION: String
+  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
 end

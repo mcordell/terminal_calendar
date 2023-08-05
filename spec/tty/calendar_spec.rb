@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Calendar do
+RSpec.describe TerminalCalendar do
   it 'has a version number' do
-    expect(TTY::Calendar::VERSION).not_to be nil
+    expect(TerminalCalendar::VERSION).not_to be nil
   end
 
   describe '.cal' do
     context 'when not passed a month' do
       before { Timecop.freeze(Date.new(2023, 6, 7)) }
       after { Timecop.return }
-      subject { TTY::Calendar.cal }
+      subject { TerminalCalendar.cal }
 
       it 'outputs month page for the current month' do
         current_day = "\e[7m\e[31m 7\e[0m\e[0m"

@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Calendar::Selection::MonthPage do
+RSpec.describe TerminalCalendar::Selection::MonthPage do
   before { Timecop.freeze(Date.new(2023, 6, 7)) }
   after { Timecop.return }
 
-  let(:month) {  TTY::Calendar::Month.new(3, 2023) }
+  let(:month) {  TerminalCalendar::Month.new(3, 2023) }
   subject(:instance) { described_class.new(month) }
 
   describe '#render' do
     subject { instance.render }
 
     context 'when the month contains today' do
-      let(:month) {  TTY::Calendar::Month.new(6, 2023) }
+      let(:month) {  TerminalCalendar::Month.new(6, 2023) }
 
       it 'highlights the current day' do
         current_day = "\e[7m\e[31m 7\e[0m\e[0m"
@@ -49,7 +49,7 @@ RSpec.describe TTY::Calendar::Selection::MonthPage do
       end
 
       context 'month with even letters' do
-        let(:month) {  TTY::Calendar::Month.new(6, 2023) }
+        let(:month) {  TerminalCalendar::Month.new(6, 2023) }
 
         it 'outputs a string for a month similar to "cal"' do
           cal_output = <<~CAL
@@ -67,7 +67,7 @@ RSpec.describe TTY::Calendar::Selection::MonthPage do
       end
 
       context 'month with several empty days on final row' do
-        let(:month) {  TTY::Calendar::Month.new(5, 2023) }
+        let(:month) {  TerminalCalendar::Month.new(5, 2023) }
 
         it 'outputs a string for a month similar to "cal"' do
           cal_output = <<~CAL

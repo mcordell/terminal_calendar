@@ -1,39 +1,39 @@
-# TTY::Calendar
+# TerminalCalendar
 
-> A calendar and day picker for the terminal
+> A ruby calendar and day picker for the terminal
 
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add tty-calendar
+    $ bundle add terminal_calendar
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install tty-calendar
+    $ gem install terminal_calendar
 
 ## Usage
 
-`tty-calendar` can be used to render a calendar page similar to the linux tool `cal`:
+`terminal_calendar` can be used to render a calendar page similar to the linux tool `cal`:
 
 ```ruby
-require 'tty-calendar'
+require 'terminal_calendar'
 # this will render a calendar for the current month to the comma(nd line
-puts TTY::Calendar.cal
+puts TerminalCalendar.cal
 ```
 
 ![cal screenshot](./_doc/cal-screenshot.png) 
 
-`tty-calendar` can also be used as a date picker to select days from a calendar:
+`terminal_calendar` can also be used as a date picker to select days from a calendar:
 
 ![picker gif](./_doc/date-picker.gif)
 
 In the above GIF, the following code allows dates to be picked:
 
 ```ruby
-require 'tty/calendar'
+require 'terminal_calendar'
 
-dates = TTY::Calendar.date_picker
+dates = TerminalCalendar.date_picker
 
 # where dates is an Array of Date objects
 ```
@@ -48,7 +48,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/mcordell/tty-calendar.
+Bug reports and pull requests are welcome on GitHub at https://github.com/mcordell/terminal_calendar.
 
 ## License
 

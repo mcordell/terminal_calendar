@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Calendar::Month do
+RSpec.describe TerminalCalendar::Month do
   before { Timecop.freeze(Date.new(2023, 6, 7)) }
   after { Timecop.return }
   subject(:instance) { described_class.new(6, 2023) }

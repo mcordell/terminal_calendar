@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'tty/calendar'
+require 'terminal_calendar'
 require 'timecop'
 class StringIO
   def wait_readable(*)
