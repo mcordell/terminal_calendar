@@ -12,7 +12,7 @@ RSpec.describe TerminalCalendar do
       subject { TerminalCalendar.cal }
 
       it 'outputs month page for the current month' do
-        current_day = "\e[7m\e[31m 7\e[0m\e[0m"
+        current_day = "\e[31m 7\e[0m"
 
         cal_output = <<~CAL
                June 2023

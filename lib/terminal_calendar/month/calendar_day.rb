@@ -20,7 +20,7 @@ class TerminalCalendar
       def render
         as_string = day.to_s
         as_string = " #{as_string}" if as_string.length == 1
-        as_string = pastel.inverse(pastel.red(as_string)) if today?
+        as_string = pastel.red(as_string) if today?
         as_string
       end
 

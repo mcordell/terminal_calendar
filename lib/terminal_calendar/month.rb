@@ -70,7 +70,7 @@ class TerminalCalendar
     def build_rows
       null_date = NullDay.new.freeze
       current_row = Array.new(DAYS_IN_THE_WEEK) { null_date }
-      pastel = Pastel.new
+      pastel = Pastel.new(enabled: true)
       [].tap do |rows|
         (start_of_month..end_of_month).each do |d|
           if d.wday.zero? && !current_row.empty?

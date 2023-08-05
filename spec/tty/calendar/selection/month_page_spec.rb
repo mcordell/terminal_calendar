@@ -3,19 +3,19 @@
 RSpec.describe TerminalCalendar::Selection::MonthPage do
   before { Timecop.freeze(Date.new(2023, 6, 7)) }
   after { Timecop.return }
+  let(:pastel) { Pastel.new(enabled: true) }
 
   let(:month) {  TerminalCalendar::Month.new(3, 2023) }
-  subject(:instance) { described_class.new(month) }
+  subject(:instance) { described_class.new(month, pastel) }
 
   describe '#render' do
     subject { instance.render }
 
     context 'when the month contains today' do
       let(:month) {  TerminalCalendar::Month.new(6, 2023) }
+      let(:current_day) { pastel.red(' 7') }
 
       it 'highlights the current day' do
-        current_day = "\e[7m\e[31m 7\e[0m\e[0m"
-
         cal_output = <<~CAL
                June 2023
           Su Mo Tu We Th Fr Sa
@@ -27,6 +27,11 @@ RSpec.describe TerminalCalendar::Selection::MonthPage do
         CAL
 
         is_expected.to eq(cal_output.chomp)
+      end
+
+      it '#selection_grid_lines' do
+        all_lines = instance.selection_grid_lines
+        expect(all_lines[1]).to eq " 4  5  6 #{current_day}  8  9 10"
       end
     end
 

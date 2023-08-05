@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'pastel'
 
 RSpec.describe TerminalCalendar::Month do
   before { Timecop.freeze(Date.new(2023, 6, 7)) }
@@ -20,8 +21,8 @@ RSpec.describe TerminalCalendar::Month do
     context 'when the month contains today' do
       let(:month) {  described_class.new(6, 2023) }
 
-      it 'highlights the current day' do
-        current_day = "\e[7m\e[31m 7\e[0m\e[0m"
+      it 'sets the current day to red' do
+        current_day = "\e[31m 7\e[0m"
 
         cal_output = <<~CAL
                June 2023

@@ -9,10 +9,10 @@ class TerminalCalendar
         new(month)
       end
 
-      def initialize(month)
+      def initialize(month, pastel=Pastel.new)
         @selection_grid = Grid.build_from_objects(month.as_rows)
         @month = month
-        @pastel = Pastel.new
+        @pastel = pastel
       end
 
       # Renders the calendar as a string.
@@ -33,10 +33,14 @@ class TerminalCalendar
         @line_count ||= render_rows.count
       end
 
+      def selection_grid_lines
+        selection_grid.render_lines
+      end
+
       private
 
       def render_rows
-        calendar_header.concat(selection_grid.render_lines)
+        calendar_header.concat(selection_grid_lines)
       end
 
       def refresh(lines)
