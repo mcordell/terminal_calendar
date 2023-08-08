@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
-require_relative './tty/prompt/carousel'
+require_relative 'tty/prompt/carousel'
 require_relative 'terminal_calendar/version'
 require_relative 'terminal_calendar/month'
 require_relative 'terminal_calendar/selection/cell'
@@ -10,7 +10,7 @@ require_relative 'terminal_calendar/selection/grid'
 require_relative 'terminal_calendar/selection/month_page'
 require_relative 'terminal_calendar/selection/month_year_dialog'
 require_relative 'terminal_calendar/date_picker'
-require_relative './date_extensions'
+require_relative 'date_extensions'
 require 'pastel'
 require 'tty-cursor'
 require 'tty-reader'

@@ -57,8 +57,8 @@ class TerminalCalendar
       # @param block [Proc] the block passed to the missing method
       # @return [Object] the result of calling the missing method on the underlying object
       # @raise [NoMethodError] if the underlying object does not respond to the missing method
-      def method_missing(method, *args, &block)
-        underlying_object.send(method, *args, &block)
+      def method_missing(...)
+        underlying_object.send(...)
       end
 
       # Checks if the underlying object responds to the missing method.

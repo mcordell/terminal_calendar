@@ -80,23 +80,10 @@ class TerminalCalendar
       # @param count [Integer, Symbol] The number of lines to render. If set to :all, all lines will be rendered.
       # @return [Array<String>] An array of strings representing the rendered lines.
       def render_lines(count=:all)
-        start_at = if count == :all || count > bottom_of_grid
-                     0
-                   else
-                     bottom_of_grid - count
-                   end
-
-        highlighted_x, highlighted_y = highlighted_position
+        start_at = render_start(count)
 
         (start_at..bottom_of_grid).map do |i|
-          next grid[i].map(&:render).join(' ') unless highlighted_y && i == highlighted_y
-
-          (0..row_end).map do |x|
-            rendered = grid[i][x].render
-            next rendered unless x == highlighted_x
-
-            @pastel.inverse(rendered)
-          end.join(' ')
+          render_row(i)
         end
       end
 
@@ -193,6 +180,29 @@ class TerminalCalendar
 
       def highlighted?
         @highlighted_position.nil?
+      end
+
+      private
+
+      # @api private
+      def render_row(i)
+        row = grid[i]
+        highlighted_x, highlighted_y = highlighted_position
+        return row.map(&:render).join(' ') unless highlighted_y == i
+
+        (0..row_end).map do |x|
+          rendered = row[x].render
+          next rendered unless x == highlighted_x
+
+          @pastel.inverse(rendered)
+        end.join(' ')
+      end
+
+      # @api private
+      def render_start(count)
+        return 0 if count == :all || count > bottom_of_grid
+
+        bottom_of_grid - count
       end
     end
   end

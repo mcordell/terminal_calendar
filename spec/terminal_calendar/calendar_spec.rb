@@ -2,14 +2,15 @@
 
 RSpec.describe TerminalCalendar do
   it 'has a version number' do
-    expect(TerminalCalendar::VERSION).not_to be nil
+    expect(TerminalCalendar::VERSION).not_to be_nil
   end
 
   describe '.cal' do
     context 'when not passed a month' do
+      subject { described_class.cal }
+
       before { Timecop.freeze(Date.new(2023, 6, 7)) }
       after { Timecop.return }
-      subject { TerminalCalendar.cal }
 
       it 'outputs month page for the current month' do
         current_day = "\e[31m 7\e[0m"
@@ -24,7 +25,7 @@ RSpec.describe TerminalCalendar do
           25 26 27 28 29 30#{'   '}
         CAL
 
-        is_expected.to eq(cal_output.chomp)
+        expect(output).to eq(cal_output.chomp)
       end
     end
   end

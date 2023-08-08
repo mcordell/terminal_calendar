@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
+# rubocop:disable RSpec/ExampleLength
 RSpec.describe TerminalCalendar::Selection::MonthPage do
+  subject(:instance) { described_class.new(month, pastel) }
+
   before { Timecop.freeze(Date.new(2023, 6, 7)) }
   after { Timecop.return }
+
   let(:pastel) { Pastel.new(enabled: true) }
 
   let(:month) {  TerminalCalendar::Month.new(3, 2023) }
-  subject(:instance) { described_class.new(month, pastel) }
 
   describe '#render' do
-    subject { instance.render }
+    subject(:rendered_output) { instance.render }
 
     context 'when the month contains today' do
       let(:month) {  TerminalCalendar::Month.new(6, 2023) }
@@ -26,7 +29,7 @@ RSpec.describe TerminalCalendar::Selection::MonthPage do
           25 26 27 28 29 30#{'   '}
         CAL
 
-        is_expected.to eq(cal_output.chomp)
+        expect(rendered_output).to eq(cal_output.chomp)
       end
 
       it '#selection_grid_lines' do
@@ -50,10 +53,10 @@ RSpec.describe TerminalCalendar::Selection::MonthPage do
           26 27 28 29 30 31#{'   '}
         CAL
 
-        is_expected.to eq(cal_output.chomp)
+        expect(rendered_output).to eq(cal_output.chomp)
       end
 
-      context 'month with even letters' do
+      context 'with a month with even letters' do
         let(:month) {  TerminalCalendar::Month.new(6, 2023) }
 
         it 'outputs a string for a month similar to "cal"' do
@@ -67,11 +70,11 @@ RSpec.describe TerminalCalendar::Selection::MonthPage do
             25 26 27 28 29 30#{'   '}
           CAL
 
-          is_expected.to eq(cal_output.chomp)
+          expect(rendered_output).to eq(cal_output.chomp)
         end
       end
 
-      context 'month with several empty days on final row' do
+      context 'with a month with several empty days on final row' do
         let(:month) {  TerminalCalendar::Month.new(5, 2023) }
 
         it 'outputs a string for a month similar to "cal"' do
@@ -85,9 +88,10 @@ RSpec.describe TerminalCalendar::Selection::MonthPage do
             28 29 30 31#{'   ' * 3}
           CAL
 
-          is_expected.to eq(cal_output.chomp)
+          expect(rendered_output).to eq(cal_output.chomp)
         end
       end
     end
   end
 end
+# rubocop:enable RSpec/ExampleLength

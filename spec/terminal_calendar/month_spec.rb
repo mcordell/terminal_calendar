@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 require 'pastel'
 
+# rubocop:disable RSpec/ExampleLength, RSpec/NestedGroups
 RSpec.describe TerminalCalendar::Month do
+  subject(:instance) { described_class.new(6, 2023) }
+
   before { Timecop.freeze(Date.new(2023, 6, 7)) }
   after { Timecop.return }
-  subject(:instance) { described_class.new(6, 2023) }
 
   describe '.this_month' do
     subject(:instance) { described_class.this_month }
@@ -56,7 +58,7 @@ RSpec.describe TerminalCalendar::Month do
         expect(month.render).to eq(cal_output.chomp)
       end
 
-      context 'month with even letters' do
+      context 'with a month with even letters' do
         let(:month) {  described_class.new(6, 2023) }
 
         it 'outputs a string for a month similar to "cal"' do
@@ -74,7 +76,7 @@ RSpec.describe TerminalCalendar::Month do
         end
       end
 
-      context 'month with several empty days on final row' do
+      context 'with a month with several empty days on final row' do
         let(:month) {  described_class.new(5, 2023) }
 
         it 'outputs a string for a month similar to "cal"' do
@@ -95,33 +97,33 @@ RSpec.describe TerminalCalendar::Month do
   end
 
   describe '#next_month' do
-    subject { instance.next_month }
+    subject(:next_month) { instance.next_month }
 
     it 'returns the next month' do
-      is_expected.to eq described_class.new(7, 2023)
+      expect(next_month).to eq described_class.new(7, 2023)
     end
 
     context 'when the month is December' do
       let(:instance) { described_class.new(12, 2023) }
 
       it 'returns the next month in the next year' do
-        is_expected.to eq described_class.new(1, 2024)
+        expect(next_month).to eq described_class.new(1, 2024)
       end
     end
   end
 
   describe '#previous_month' do
-    subject { instance.previous_month }
+    subject(:previous_month) { instance.previous_month }
 
     it 'returns the previous month' do
-      is_expected.to eq described_class.new(5, 2023)
+      expect(previous_month).to eq described_class.new(5, 2023)
     end
 
     context 'when the month is January' do
       let(:instance) { described_class.new(1, 2023) }
 
       it 'returns the previous month in the previous year' do
-        is_expected.to eq described_class.new(12, 2022)
+        expect(previous_month).to eq described_class.new(12, 2022)
       end
     end
   end
@@ -130,7 +132,7 @@ RSpec.describe TerminalCalendar::Month do
     it 'is true for months with the same year and month' do
       month_one = described_class.new(5, 2023)
       month_two = described_class.new(5, 2023)
-      expect(month_one == month_two).to eq true
+      expect(month_one == month_two).to be true
     end
   end
 
@@ -138,7 +140,7 @@ RSpec.describe TerminalCalendar::Month do
     it 'is true for months with the same year and month' do
       month_one = described_class.new(5, 2023)
       month_two = described_class.new(5, 2023)
-      expect(month_one.eql?(month_two)).to eq true
+      expect(month_one.eql?(month_two)).to be true
     end
   end
 
@@ -157,8 +159,5 @@ RSpec.describe TerminalCalendar::Month do
       expect(month_one.object_id).to eq month_two.object_id
     end
   end
-
-  describe '#next_month' do
-    let(:month) {  described_class.new(3, 2023) }
-  end
 end
+# rubocop:enable RSpec/ExampleLength, RSpec/NestedGroups

@@ -68,19 +68,29 @@ class TerminalCalendar
     private
 
     def build_rows
-      null_date = NullDay.new.freeze
-      current_row = Array.new(DAYS_IN_THE_WEEK) { null_date }
-      pastel = Pastel.new(enabled: true)
+      current_row = empty_week
       [].tap do |rows|
         (start_of_month..end_of_month).each do |d|
           if d.wday.zero? && !current_row.empty?
             rows.push(current_row)
-            current_row = Array.new(DAYS_IN_THE_WEEK) { null_date }
+            current_row = empty_week
           end
           current_row[d.wday] = CalendarDay.new(d, pastel).freeze
         end
         rows.push(current_row) unless current_row.empty?
       end
+    end
+
+    def null_date
+      @null_date ||= NullDay.new.freeze
+    end
+
+    def empty_week
+      Array.new(DAYS_IN_THE_WEEK) { null_date }
+    end
+
+    def pastel
+      @pastel ||= Pastel.new(enabled: true)
     end
   end
 end

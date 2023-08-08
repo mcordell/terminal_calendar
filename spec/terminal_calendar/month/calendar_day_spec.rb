@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe TerminalCalendar::Month::CalendarDay do
+  subject(:instance) { described_class.new(date, pastel) }
+
   let(:pastel) { Pastel.new(enabled: true) }
   let(:date) { Date.new(2023, 8, 1) }
 
   before { Timecop.freeze(Date.new(2023, 6, 7)) }
   after { Timecop.return }
-
-  subject(:instance) { described_class.new(date, pastel) }
 
   describe 'Testing color' do
     it 'works like pastel' do
@@ -16,13 +16,13 @@ RSpec.describe TerminalCalendar::Month::CalendarDay do
   end
 
   describe '#render' do
-    subject { instance.render }
+    subject(:rendered_output) { instance.render }
 
     context 'when it is today' do
       let(:date) { Date.new(2023, 6, 7) }
 
       it 'is styled red' do
-        is_expected.to eq("\e[31m 7\e[0m")
+        expect(rendered_output).to eq("\e[31m 7\e[0m")
       end
     end
   end

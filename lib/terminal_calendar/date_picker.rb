@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-#
+
 class TerminalCalendar
   class DatePicker
     extend Forwardable
@@ -34,38 +34,7 @@ class TerminalCalendar
       @output.print(@cursor.hide)
       render
 
-      loop do
-        press = reader.read_keypress
-        kp = TTY::Reader::Keys.keys.fetch(press) { press }
-
-        case kp
-        when :up, :down, :left, :right
-          move(kp)
-          redraw
-        when :tab
-          unless selector&.on_header?
-            selector&.toggle_selected!
-            redraw
-          end
-        when :return
-          unless selector && selector&.on_header?
-            break
-          end
-
-          clear_page_lines
-          new_date = TerminalCalendar::Selection::MonthYearDialog.new(output: @output,
-                                                                      start_at: current_page.month.start_of_month).select
-          new_month = TerminalCalendar::Month.new(new_date.month, new_date.year)
-          @current_page = month_pages.fetch(new_month) do
-            month_pages[new_month] = Selection::MonthPage.build(new_month)
-          end
-          clear_selection_dialog
-          initialize_selector(:bottom)
-          render
-          @output.print(@cursor.hide)
-          redraw
-        end
-      end
+      selection_loop
 
       month_pages.values.flat_map { |p| p.selection_grid.selected_cells.map(&:date) }
     ensure
@@ -77,6 +46,51 @@ class TerminalCalendar
     end
 
     private
+
+    # rubocop:disable Metrics/MethodLength
+    def selection_loop
+      loop do
+        press = reader.read_keypress
+        kp = TTY::Reader::Keys.keys.fetch(press) { press }
+
+        case kp
+        when :up, :down, :left, :right
+          move(kp)
+          redraw
+        when :tab
+          toggle!
+        when :return
+          unless selector&.on_header?
+            break
+          end
+
+          select_month
+        end
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    def toggle!
+      return if selector&.on_header?
+
+      selector&.toggle_selected!
+      redraw
+    end
+
+    def select_month
+      clear_page_lines
+      new_date = TerminalCalendar::Selection::MonthYearDialog.new(
+        output: @output,
+        start_at: current_page.month.start_of_month
+      ).select
+      new_month = TerminalCalendar::Month.new(new_date.month, new_date.year)
+      set_new_page(new_month)
+      clear_selection_dialog
+      initialize_selector(:bottom)
+      render
+      @output.print(@cursor.hide)
+      redraw
+    end
 
     def clear_full_page!
       @output.print(refresh(current_page.line_count))
@@ -114,21 +128,20 @@ class TerminalCalendar
       case selector.move(direction)
       when :off_left
         new_month = @current_page.month.previous_month
-        clear_full_page!
-        @current_page = month_pages.fetch(new_month) do
-          month_pages[new_month] = Selection::MonthPage.build(new_month)
-        end
-        initialize_selector(:bottom)
-        render
+        set_new_page(new_month)
       when :off_right
         new_month = @current_page.month.next_month
-        clear_full_page!
-        @current_page = month_pages.fetch(new_month) do
-          month_pages[new_month] = Selection::MonthPage.build(new_month)
-        end
-        initialize_selector(:bottom)
-        render
+        set_new_page(new_month)
       end
+    end
+
+    def set_new_page(new_month)
+      clear_full_page!
+      @current_page = month_pages.fetch(new_month) do
+        month_pages[new_month] = Selection::MonthPage.build(new_month)
+      end
+      initialize_selector(:bottom)
+      render
     end
 
     # Initializes the selector based on the given direction.

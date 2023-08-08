@@ -164,3 +164,4 @@ class TerminalCalendar
     end
   end
 end
+# rubocop:enable Naming::MethodParameterName
