@@ -13,7 +13,11 @@ jobs:
       - ruby/install-deps:
           bundler-version: '2.4.14'
           with-cache: false
-      - ruby/rspec-test
+      - run:
+          name: Run rsped
+          command: |
+            bundle install
+            bundle exec rspec
 workflows:
   build_and_test:
     jobs:
