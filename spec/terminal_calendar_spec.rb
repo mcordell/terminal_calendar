@@ -7,11 +7,12 @@ RSpec.describe TerminalCalendar do
 
   describe '.cal' do
     context 'when not passed a month' do
-      subject { described_class.cal }
+      subject(:output) { described_class.cal }
 
       before { Timecop.freeze(Date.new(2023, 6, 7)) }
       after { Timecop.return }
 
+      # rubocop:disable RSpec/ExampleLength
       it 'outputs month page for the current month' do
         current_day = "\e[31m 7\e[0m"
 
@@ -27,6 +28,7 @@ RSpec.describe TerminalCalendar do
 
         expect(output).to eq(cal_output.chomp)
       end
+      # rubocop:enable RSpec/ExampleLength
     end
   end
 end
