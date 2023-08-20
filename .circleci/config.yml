@@ -10,13 +10,11 @@ jobs:
       - image: cimg/ruby:<< parameters.ruby-version >>
     steps:
       - checkout
-      - ruby/install-deps:
-          bundler-version: '2.4.14'
-          with-cache: false
       - run:
-          name: Run rsped
+          name: Run rspec
           command: |
-            bundle install
+            gem install bundler -v 2.4.14
+            bundle install --without development
             bundle exec rspec
 workflows:
   build_and_test:

@@ -9,8 +9,11 @@ gem 'rake', '~> 13.0'
 
 gem 'rspec', '~> 3.0'
 
-gem 'pry-byebug'
-gem 'rubocop', require: false
-gem 'rubocop-rake', require: false
-gem 'rubocop-rspec', require: false
+group :development do
+  gem 'pry-byebug'
+  gem 'rubocop', require: false
+  gem 'rubocop-rake', require: false
+  gem 'rubocop-rspec', require: false
+end
+
 gem 'timecop'
