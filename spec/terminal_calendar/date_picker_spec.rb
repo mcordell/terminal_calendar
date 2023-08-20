@@ -9,8 +9,8 @@ RSpec.describe TerminalCalendar::DatePicker do
     let(:today) { Date.new(2023, 1, 1) }
     let(:select_key) { "\t" }
     let(:quit_key) { "\r" }
-    let(:input) { StringIO.new }
-    let(:output) { StringIO.new }
+    let(:input) { MockStringIO.new }
+    let(:output) { MockStringIO.new }
     let(:left_direction) { "\e[D"  }
     let(:up_direction) { "\e[A" }
 

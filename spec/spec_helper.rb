@@ -2,7 +2,8 @@
 
 require 'terminal_calendar'
 require 'timecop'
-class StringIO
+require 'stringio'
+class MockStringIO < StringIO
   def wait_readable(*)
     true
   end
