@@ -38,24 +38,7 @@ class TerminalCalendar
         cursor.invisible do
           render
 
-          loop do
-            press = reader.read_keypress
-            kp = TTY::Reader::Keys.keys.fetch(press) { press }
-
-            case kp
-            when :up, :down
-              toggle_selected
-              redraw(2)
-            when :left
-              selected_car.move_left
-              redraw(@selected == :year ? 1 : 2)
-            when :right
-              selected_car.move_right
-              redraw(@selected == :year ? 1 : 2)
-            when :return
-              return Date.new(selected_year.to_i, Date::MONTHNAMES.find_index(selected_month), 1)
-            end
-          end
+          key_capture
         end
       end
 
@@ -68,6 +51,29 @@ class TerminalCalendar
       def_delegator :@year_car, :selected_option, :selected_year
 
       private
+
+      def key_capture
+        loop do
+          case get_key_press
+          when :up, :down
+            toggle_selected
+            redraw(2)
+          when :left
+            selected_car.move_left
+            redraw(@selected == :year ? 1 : 2)
+          when :right
+            selected_car.move_right
+            redraw(@selected == :year ? 1 : 2)
+          when :return
+            return Date.new(selected_year.to_i, Date::MONTHNAMES.find_index(selected_month), 1)
+          end
+        end
+      end
+
+      def get_key_press
+        press = reader.read_keypress
+        TTY::Reader::Keys.keys.fetch(press) { press }
+      end
 
       def initialize_carousels(start_at)
         @selected = :month

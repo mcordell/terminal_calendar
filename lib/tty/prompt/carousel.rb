@@ -13,7 +13,9 @@ module TTY
         end_keys: [:return]
       }.freeze
 
-      def initialize(options, start_at: 0, key_map: DEFAULT_KEY_MAP, input: $stdin, output: $stdout, env: ENV, interrupt: :error,
+      # rubocop:disable Metrics/MethodLength
+      def initialize(options, start_at: 0, key_map: DEFAULT_KEY_MAP,
+                     input: $stdin, output: $stdout, env: ENV, interrupt: :error,
                      track_history: true, option_style: nil, margin: 0, padding: 2)
         @reader = TTY::Reader.new(
           input: input,
@@ -34,24 +36,11 @@ module TTY
         @option_style = option_style
         @margin = margin
       end
+      # rubocop:enable Metrics/MethodLength
 
       def select
         render
-        loop do
-          press = reader.read_keypress
-          kp = TTY::Reader::Keys.keys.fetch(press) { press }
-          case kp
-          when key_map[:left]
-            move_left
-            redraw
-          when key_map[:right]
-            move_right
-            redraw
-          when *key_map[:end_keys]
-            @output.puts
-            break
-          end
-        end
+        capture_keys
       end
 
       def render
@@ -85,6 +74,24 @@ module TTY
       end
 
       private
+
+      def capture_keys
+        loop do
+          press = reader.read_keypress
+          kp = TTY::Reader::Keys.keys.fetch(press) { press }
+          case kp
+          when key_map[:left]
+            move_left
+            redraw
+          when key_map[:right]
+            move_right
+            redraw
+          when *key_map[:end_keys]
+            @output.puts
+            break
+          end
+        end
+      end
 
       def left_arrow
         TTY::Prompt::Symbols::KEYS.fetch(:arrow_left)

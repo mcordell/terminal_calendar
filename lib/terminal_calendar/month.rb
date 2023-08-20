@@ -67,6 +67,7 @@ class TerminalCalendar
 
     private
 
+    # rubocop:disable Metrics/AbcSize
     def build_rows
       current_row = empty_week
       [].tap do |rows|
@@ -80,6 +81,7 @@ class TerminalCalendar
         rows.push(current_row) unless current_row.empty?
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def null_date
       @null_date ||= NullDay.new.freeze
