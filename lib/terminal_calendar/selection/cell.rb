@@ -57,8 +57,8 @@ class TerminalCalendar
       # @param block [Proc] the block passed to the missing method
       # @return [Object] the result of calling the missing method on the underlying object
       # @raise [NoMethodError] if the underlying object does not respond to the missing method
-      def method_missing(...)
-        underlying_object.send(...)
+      def method_missing(method, *args, &block)
+        underlying_object.send(method, *args, &block)
       end
 
       # Checks if the underlying object responds to the missing method.
@@ -68,32 +68,6 @@ class TerminalCalendar
       # @return [Boolean] true if the underlying object responds to the missing method, super otherwise
       def respond_to_missing?(method, include_all)
         underlying_object.respond_to?(method) || super
-      end
-    end
-
-    class NullCell < Cell
-      def initialize
-        super(nil)
-      end
-
-      def render
-        '  '
-      end
-
-      # Checks if the object is null.
-      #
-      # @return [true] Returns true.
-      def null?
-        true
-      end
-
-      # @return [false] Returns false.
-      def selected
-        false
-      end
-
-      def toggle_selected!
-        false
       end
     end
   end

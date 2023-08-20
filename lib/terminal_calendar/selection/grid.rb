@@ -159,7 +159,7 @@ class TerminalCalendar
       # Returns all selected cells in the grid
       # @return [Array<Cell>] Selected cells
       def selected_cells
-        grid.flatten.filter(&:selected?)
+        grid.flatten.select(&:selected?)
       end
 
       def redraw_lines
