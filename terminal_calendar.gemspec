@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary = 'Terminal Calendar'
   spec.description = 'Utility for manipulating a calendar in the command line'
   spec.homepage = 'https://github.com/mcordell/terminal_calendar'
-  spec.required_ruby_version = '>= 2.6.0'
+  spec.required_ruby_version = '>= 2.5.0'
   spec.license = 'MIT'
 
   spec.metadata['homepage_uri'] = spec.homepage
