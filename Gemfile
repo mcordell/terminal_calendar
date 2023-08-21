@@ -16,4 +16,5 @@ group :development do
   gem 'rubocop-rspec', require: false
 end
 
+gem 'coveralls_reborn', require: false
 gem 'timecop'

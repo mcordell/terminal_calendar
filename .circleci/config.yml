@@ -1,6 +1,8 @@
 version: 2.1
 orbs:
   ruby: circleci/ruby@2.1.0
+  coveralls: coveralls/coveralls@2.2.1
+
 jobs:
   test:
     parameters:
