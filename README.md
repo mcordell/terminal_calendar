@@ -1,5 +1,9 @@
 # TerminalCalendar
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/mcordell/terminal_calendar/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/mcordell/terminal_calendar/tree/master)
+[![Coverage Status](https://coveralls.io/repos/github/mcordell/terminal_calendar/badge.svg)](https://coveralls.io/github/mcordell/terminal_calendar)
+[![Gem Version](https://badge.fury.io/rb/terminal_calendar.svg)](https://badge.fury.io/rb/terminal_calendar)
+
 > A ruby calendar and day picker for the terminal
 
 ## Installation
