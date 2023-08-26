@@ -33,6 +33,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'tty-cursor', '~> 0.7', '>= 0.7.0'
   spec.add_dependency 'tty-prompt', '~> 0.23',  '>= 0.23.1'
   spec.add_dependency 'tty-reader', '~> 0.9',  '>= 0.9.0'
+  spec.cert_chain = ['certs/mcordell.pem']
+  spec.signing_key = File.expand_path('~/.ssh/gem-private_key.pem')
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
